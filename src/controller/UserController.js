@@ -1,12 +1,16 @@
 const AppError = require('../errorHandlers/AppErrorHandler');
+const authticationToken = require('../middlewares/authenticateToken');
 const User = require('../model/UserModel')
 const express = require('express');
+const jwt = require('jsonwebtoken');
 
 
 const router = express.Router();
 
 
-//user crud
+const generateToken = (user)=> {
+    return jwt.sign({'user': user},process.env.SECRET_KEY,{expiresIn:'1hr'})
+}
 
 //create user
 router.post('/register',async (req,res,next)=> {
@@ -14,8 +18,18 @@ router.post('/register',async (req,res,next)=> {
     let requestPayload = req.body;
 
     try{
+
+
+        const isUserExit = await User.findOne({email:req.body.email})
+
+        if(isUserExit){
+            return res.status(404).send({message:'User Already Registered with this email'})
+        }
+
         const createUser = await User.create(requestPayload);
-        return res.status(201).send(createUser);
+
+        const token = generateToken(createUser);
+        return res.status(201).send({token:token});
     }catch(err){
         return res.status(500).json({message: err.message});
     }
@@ -46,8 +60,10 @@ router.post('/login', async (req, res, next) => {
         }
 
         // generate token
+        const token = generateToken(user)
+   
 
-        return res.status(200).send("Login successful");
+        return res.status(200).send({token: token});
 
     } catch (error) {
         console.log(error);
@@ -57,9 +73,10 @@ router.post('/login', async (req, res, next) => {
 
 
 //get user by Id
-router.get('/:id',async (req,res,next)=> { 
+router.get('/:id',authticationToken,async (req,res,next)=> { 
 
     let userId = req.params.id;
+    
 
     try {
         const getUserById = await User.findById(userId);
