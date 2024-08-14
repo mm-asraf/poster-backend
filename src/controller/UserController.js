@@ -2,13 +2,14 @@ const AppError = require('../errorHandlers/AppErrorHandler');
 const User = require('../model/UserModel')
 const express = require('express');
 
+
 const router = express.Router();
 
 
 //user crud
 
 //create user
-router.post('',async (req,res,next)=> {
+router.post('/register',async (req,res,next)=> {
     
     let requestPayload = req.body;
 
@@ -20,6 +21,40 @@ router.post('',async (req,res,next)=> {
     }
 
 })
+
+
+router.post('/login', async (req, res, next) => {
+    let requestPayload = req.body;
+
+    try {
+        let password = req.body.password;
+
+        // retrieve user information from db
+        let user = await User.findOne({ email: req.body.email });
+
+        //if user not exit return user not found error
+        if (!user) {
+            return next(new AppError("User not found", 404, 'USER_NOT_FOUND'));
+        }
+
+        // check request password with db password
+        let match = await user.checkPassword(password);
+
+        //if password didn't match return a authentication error
+        if (!match) {
+            return res.status(401).json({ message: 'Password does not match' });
+        }
+
+        // generate token
+
+        return res.status(200).send("Login successful");
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
 
 //get user by Id
 router.get('/:id',async (req,res,next)=> { 
