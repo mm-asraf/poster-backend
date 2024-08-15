@@ -46,6 +46,6 @@ userSchema.methods.checkPassword = function(password) {
 
 
 
-module.exports =  model('User',userSchema);
+module.exports =  model('user',userSchema);
 
 
