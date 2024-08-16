@@ -439,13 +439,15 @@ json
   "errorCode": "RESOURCE_NOT_FOUND",
   "timestamp": "2024-08-15T10:30:00Z"
 }
+
 Environment Variables
 Create a .env file in the src directory with the following variables:
 
 bash
 MONGO_URI=mongodb://localhost:27017/yourdbname
 JWT_SECRET=your_jwt_secret
+
 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the ISC License - see the LICENSE file for details.
 
 
