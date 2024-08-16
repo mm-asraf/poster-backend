@@ -10,11 +10,13 @@ connectDb();
 //controllers
 const userController = require("./controller/UserController");
 const AppError = require('./errorHandlers/AppErrorHandler');
+const tagController =  require('./controller/TagController')
 
 
 app.use(express.json())
 
 app.use("/user",userController)
+app.use("/tag",tagController)
 
 
 
@@ -39,7 +41,8 @@ function globalErrorHandler(err, req, res, next) {
     if (err instanceof AppError) {
         return res.status(err.statusCode).json({
             status: err.status,
-            errors: errorDetails,
+            statusCode:err.statusCode,
+            errorMessage: errorDetails,
             errorCode: err.errorCode,
             details: err.details,
             timestamp: new Date().toISOString(),
