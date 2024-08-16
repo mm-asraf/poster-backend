@@ -11,7 +11,7 @@ router.post('',async (req,res,next)=> {
 
       let createComment = await  Comment.create(req.body);
 
-      return res.status(201).send(createComment)
+      return res.status(201).send({data:createComment})
 
         
     } catch (error) {
@@ -29,7 +29,7 @@ router.get('',async (req,res,next)=> {
             return res.status(404).json({error:"Comment not found"})
         }
 
-        return res.status(200).send(getCommentById);
+        return res.status(200).send({data:getCommentById});
         
     } catch (error) {
         return res.status(500).json({error:error.message})
@@ -42,7 +42,7 @@ router.patch('',async (req,res,next)=> {
     try {
         let updateCommentById = await Comment.findByIdAndUpdate(req.params.id,req.body,{new:true}).lean().exec();
 
-        return res.status(200).send(updateCommentById)
+        return res.status(200).send({data:updateCommentById})
         
     } catch (error) {
         return res.status(500).json({error:error.message})

@@ -21,9 +21,9 @@ router.post("/register", async (req, res, next) => {
     const createUser = await User.create(requestPayload);
 
     const token = generateToken(createUser);
-    return res.status(201).send({ token: token });
+    return res.status(201).send({ token: token,status: "success" });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message ,status:"failed"});
   }
 });
 
@@ -53,7 +53,7 @@ router.post("/login", async (req, res, next) => {
     // generate token
     const token = generateToken(user);
 
-    return res.status(200).send({ token: token });
+    return res.status(200).send({ token: token ,status:"success" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
@@ -67,13 +67,13 @@ router.get("/:id", authticationToken, async (req, res, next) => {
   try {
     const getUserById = await User.findById(userId);
     if (getUserById) {
-      return res.status(200).json(getUserById);
+      return res.status(200).json({data:getUserById,status:"success"});
     } else {
       return next(new AppError("User not found", 404, "USER_NOT_FOUND"));
     }
   } catch (error) {
     // Pass error to the global error handler
-    return next(error);
+    return res.status(500).json({message: "Something went wrong" ,status:"failed"});
   }
 });
 
@@ -88,7 +88,7 @@ router.get("/firstName/:firstName", async (req, res, next) => {
     }
     const user = await User.find({ firstName: new RegExp(firstName, "i") });
 
-    console.log("after User.find ");
+
     if (user.length > 0) {
       return res.status(200).send(user);
     } else {
@@ -98,7 +98,7 @@ router.get("/firstName/:firstName", async (req, res, next) => {
     }
   } catch (error) {
     // Pass error to the global error handler
-    return next(error);
+    return res.status(500).send({error: error.message,status:"failed"});
   }
 });
 

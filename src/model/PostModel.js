@@ -7,10 +7,11 @@ const postSchema = new Schema({
     title:{type:'string',required:true},
     body:{type:'string',required:true},
     user_id:{type:Schema.Types.ObjectId,
-            ref:'user'
+            ref:'user',
+            required:true
         },
-    comment_ids:[{type:Schema.Types.ObjectId,ref:'comment'}],
-    tag_ids:{type:Schema.Types.ObjectId,ref:'tag'},
+    comment_ids:[{type:Schema.Types.ObjectId,ref:'comment',required:false}],
+    tag_ids:{type:Schema.Types.ObjectId,ref:'tag',required:true},
 
     
 },{

@@ -11,12 +11,15 @@ connectDb();
 const userController = require("./controller/UserController");
 const AppError = require('./errorHandlers/AppErrorHandler');
 const tagController =  require('./controller/TagController')
-
+const commentController = require('./controller/CommentController');
+const postController = require('./controller/PostController');
 
 app.use(express.json())
 
-app.use("/user",userController)
-app.use("/tag",tagController)
+app.use("/user",userController);
+app.use("/tag",tagController);
+app.use("/comment",commentController);
+app.use("/post",postController);
 
 
 

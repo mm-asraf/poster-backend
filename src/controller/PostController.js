@@ -10,12 +10,24 @@ router.post('',async (req,res,next) => {
 
     try {
         const createPost = await PostModel.create(requestPayload);
-        return res.status(200).send(createPost)
+        return res.status(200).send({data:createPost})
         
     } catch (error) {
         return res.status(500).json({error:error.message,status:"failed"})
     }
 })
+
+router.get('/getAllPosts', async (req, res, next) => {
+
+    try {
+       let getPostDataById =  await PostModel.find().lean().exec();
+        
+       return res.status(200).json({data: getPostDataById})
+    } catch (error) {
+        return res.status(500).json({error:error.message,status:"failed"})
+    }
+
+});
 
 
 router.get('/:id', async (req, res, next) => {

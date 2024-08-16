@@ -13,19 +13,30 @@ router.post('',async(req,res,next)=> {
     try {
 
        let tagData = await TagModel.create(requestPayload);
-       return res.status(200).json({tagData})
+       return res.status(200).send({data:tagData});
         
     } catch (error) {
-        
+        return res.status(500).json({error:error.message});
     }
 
 });
+
+router.get('/getAllTags',async(req,res,next)=> {
+
+    try {
+        let allTags = await TagModel.find().lean().exec();
+        return res.status(200).send({data:allTags});
+        
+    } catch (error) {
+        return res.status(500).json({error:error.message});
+    }
+})
 
 router.get('/:id',async(req,res,next)=> {
 
     try {
         let tagDataById = await TagModel.findById(req.params.id).lean().exec();
-        return res.status(200).send(tagDataById)
+        return res.status(200).send({data:tagDataById})
         
     } catch (error) {
         return res.status(500).json({error:error.message,status:"failed"});
@@ -36,7 +47,7 @@ router.patch('/:id',async(req,res,next)=> {
 
     try {
         let updateTagDataById = await TagModel.findByIdAndUpdate(req.params.id,req.body,{new:true}).lean().exec();
-        return res.status(200).send(updateTagDataById);
+        return res.status(200).send({data:updateTagDataById});
         
     } catch (error) {
         return res.status(500).json({error:error.message,status:"failed"});
